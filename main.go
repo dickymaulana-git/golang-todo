@@ -5,16 +5,22 @@ import (
 	"log"
 	"main/routers"
 	"net/http"
-
-	_ "github.com/lib/pq" // Importing pq for PostgreSQL driver
+	"os"
 )
 
 func main() {
+	// Langsung pakai router tanpa db
 	r := routers.Router()
-	fmt.Println("Server is running on port 8000")
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+
+	fmt.Println("🚀 Server running on port", port)
 
 	server := http.Server{
-		Addr:    "localhost:8000",
+		Addr:    ":" + port, // listen di semua interface
 		Handler: r,
 	}
 
