@@ -31,11 +31,17 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
+func init() {
+	godotenv.Load()
+}
+
 func CreateConnection() *sql.DB {
-	dsn := os.Getenv("postgresql://postgres:nasioC12no4@db.vvqcalobexngeftklnkc.supabase.co:5432/postgres")
+	// dsn := os.Getenv("DATABASE_URL")
+	dsn := os.Getenv("LOCAL_URL")
 	if dsn == "" {
 		panic("❌ DATABASE_URL not set")
 	}

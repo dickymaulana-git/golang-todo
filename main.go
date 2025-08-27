@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	// Langsung pakai router tanpa db
 	r := routers.Router()
 
 	port := os.Getenv("PORT")
@@ -19,8 +18,12 @@ func main() {
 
 	fmt.Println("🚀 Server running on port", port)
 
+	// server := http.Server{
+	// 	Addr:    ":" + port, // listen di semua interface
+	// 	Handler: r,
+	// }
 	server := http.Server{
-		Addr:    ":" + port, // listen di semua interface
+		Addr:    "localhost:8000",
 		Handler: r,
 	}
 

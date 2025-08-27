@@ -1,7 +1,9 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -35,7 +37,7 @@ func GenerateJWT(email string) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
 	claims["email"] = email
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix() // Token valid for 30 minutes
+	claims["exp"] = time.Now().Add(7 * 24 * time.Hour).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
 	if err != nil {
@@ -60,4 +62,14 @@ func SetError(err Error, message string) Error {
 func GenerateHashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+// WriteError sends a JSON error response with the given message
+func WriteError(w http.ResponseWriter, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusBadRequest)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  http.StatusBadRequest,
+		"message": message,
+	})
 }
